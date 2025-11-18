@@ -208,14 +208,12 @@ const state = {
 };
 
 let session = null;
-let deepseekApiKey = localStorage.getItem("deepseekKey") ?? "";
 
 document.addEventListener("DOMContentLoaded", () => {
   elements.question = document.getElementById("questionInput");
   elements.autoLabel = document.getElementById("autoSpreadLabel");
   elements.select = document.getElementById("spreadSelect");
   elements.drawBtn = document.getElementById("drawButton");
-  elements.setKeyBtn = document.getElementById("setKeyButton");
   elements.shuffleStage = document.getElementById("shuffleStage");
   elements.shuffleAnimation = document.getElementById("shuffleAnimation");
   elements.shuffleStatus = document.getElementById("shuffleStatus");
@@ -264,10 +262,6 @@ function attachEvents() {
 
     const spread = spreadMap.get(elements.select.value) ?? spreadMap.get(state.recommendedSpreadId);
     beginManualDraw(question, spread);
-  });
-
-  elements.setKeyBtn?.addEventListener("click", () => {
-    promptForApiKey();
   });
 }
 
@@ -577,10 +571,6 @@ function contextualizeCard(position, card, context) {
 }
 
 async function generateAiReading(question, spread, cards, context) {
-  if (!deepseekApiKey) {
-    throw new Error("请先点击“配置 API Key”输入你的 DeepSeek Key（仅保存在本地浏览器）。");
-  }
-
   const payload = {
     model: "deepseek-chat",
     messages: [
@@ -597,11 +587,10 @@ async function generateAiReading(question, spread, cards, context) {
     temperature: 0.8,
   };
 
-  const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+  const response = await fetch("/api/deepseek", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${deepseekApiKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -691,27 +680,5 @@ function formatAiContentToHtml(content) {
         .replace(/_(.+?)_/g, "<em>$1</em>")}</p>`;
     })
     .join("");
-}
-
-function promptForApiKey() {
-  const input = window.prompt("请输入 DeepSeek API Key（以 sk- 开头）。留空可清除：", "");
-  if (input === null) return;
-  const trimmed = input.trim();
-
-  if (!trimmed) {
-    deepseekApiKey = "";
-    localStorage.removeItem("deepseekKey");
-    alert("已清除 API Key，将改用通用解读。");
-    return;
-  }
-
-  if (!trimmed.startsWith("sk-")) {
-    alert("格式好像不对，请确认以 sk- 开头。");
-    return;
-  }
-
-  deepseekApiKey = trimmed;
-  localStorage.setItem("deepseekKey", trimmed);
-  alert("API Key 已保存，仅存于你的浏览器，别人无法看到。");
 }
 
