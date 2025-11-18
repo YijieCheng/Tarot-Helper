@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>塔罗占卜助手</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Tarot Insight Engine</p>
+          <h1>为你的提问匹配最合适的牌阵</h1>
+          <p>
+            输入你的问题，系统会智能推荐牌阵并模拟抽牌。你也可以手动切换牌阵，
+            立即获得围绕问题的结构化解读。
+          </p>
+        </div>
+        <button id="setKeyButton" class="ghost-button" type="button">配置 API Key</button>
+      </header>
+
+      <section class="panel">
+        <div class="panel__header">
+          <h2>1. 提问</h2>
+          <p>告诉我你正专注的问题或情境</p>
+        </div>
+        <textarea
+          id="questionInput"
+          placeholder="例如：最近的感情状况会如何发展？"
+          rows="3"
+        ></textarea>
+      </section>
+
+      <section class="panel">
+        <div class="panel__header">
+          <h2>2. 牌阵推荐</h2>
+          <p>系统会根据提问自动匹配，必要时也可手动调整</p>
+        </div>
+        <div class="spread-row">
+          <div>
+            <p class="muted">推荐牌阵</p>
+            <p id="autoSpreadLabel" class="auto-spread">请先输入问题</p>
+          </div>
+          <label class="select-label">
+            <span>使用牌阵</span>
+            <select id="spreadSelect"></select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__header">
+          <h2>3. 抽牌与解读</h2>
+          <p>点击开始，系统会洗牌、抽牌并生成解读</p>
+        </div>
+        <button id="drawButton" class="primary">开始占卜</button>
+        <div id="shuffleStage" class="shuffle hidden">
+          <div class="shuffle-visual" id="shuffleAnimation">
+            <div class="card-stack card-stack--one"></div>
+            <div class="card-stack card-stack--two"></div>
+            <div class="card-stack card-stack--three"></div>
+          </div>
+          <p id="shuffleStatus" class="shuffle-status">正在洗牌...</p>
+          <div id="cardGrid" class="card-grid hidden"></div>
+        </div>
+        <div id="results" class="results hidden">
+          <div id="spreadSummary"></div>
+          <div id="cardsContainer" class="cards"></div>
+          <div id="readingOutput" class="reading"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
+
