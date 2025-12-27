@@ -572,7 +572,7 @@ function contextualizeCard(position, card, context) {
 
 async function generateAiReading(question, spread, cards, context) {
   const payload = {
-    model: "deepseek-chat",
+    model: "deepseek-reasoner",
     messages: [
       {
         role: "system",
